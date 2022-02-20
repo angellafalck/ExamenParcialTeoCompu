@@ -4,9 +4,12 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
+#include <iterator>
+#include <string>
+#include <sstream>
 
 using namespace std;
-#define ARRAY 6
 #define MAX 100
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      /* Red */
@@ -22,28 +25,27 @@ public:
     {};
 
     //Functions
-    void loadText();
-    void printMatrix();
-    void play(int, int);
-    //void play(string,string);
-    void winningComb(string,string);
-    vector<string> vertexVector;
-    vector<string> edgeVector;
-    string process(string const& s);
     void initVertex();
     void initEdge();
+    void readFileVertex();
+    void readFileEdge();
+    void gameValidation(string, string);
+    string lowerString(string);
+    string process(string const& s);
     void createMatrix();
     void print();
     bool contains(string elem);
+    void initAux();
+    bool validateUserInput(string, string);
 
     //Variables
-    char gameRules[ARRAY][ARRAY];
-        //Variables
     int p1, p2;
-
-    int vertexNum=5; // vertex num
-    int edgesNum=10; // edge num
-        string mVertex [MAX]; // vertex collection
+    vector<string> vertexVector;
+    vector<string> edgeVector;
+    vector<char> aux;
+    int vertexNum; // vertex num
+    int edgesNum; // edge num
+    string mVertex [MAX]; // vertex collection
     int mMatrix [MAX] [MAX]; // adjacency matrix
     // returns pos of str in matrix
     int getPosition(string str);

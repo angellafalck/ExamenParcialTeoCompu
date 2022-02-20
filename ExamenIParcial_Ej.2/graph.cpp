@@ -1,36 +1,69 @@
 #include "graph.h"
 
-//Probandop para poder split el texto en un vector
-vector<string> split(string str, string token){
-    vector<string>result;
-    while(str.size()){
-        int index = str.find(token);
-        if(index!=string::npos){
-            result.push_back(str.substr(0,index));
-            str = str.substr(index+token.size());
-            if(str.size()==0)result.push_back(str);
-        }else{
-            result.push_back(str);
-            str = "";
-        }
-    }
-    return result;
-}
-//Print (operator overload)
-template<typename T>
-std::ostream& operator <<(std::ostream& out, const std::vector<T>&arr)
-{
-    //std::cout <<"{ ";
-    bool first=true;
-    for(auto& elem: arr)
-    {
-        if (first) first=false;
-        else std::cout <<", ";
 
-        std::cout<<elem;
+void Graph::readFileVertex()
+{
+    ifstream in("vertex.txt");
+
+    if (!in) {
+        cout << "Cannot open file.\n";
+        return;
     }
-    //std::cout<<" }";
-    return out;
+    string fullStr;
+    string formatStr;
+
+    while(!in.eof())
+    {
+        in >> fullStr;
+    }
+    formatStr=fullStr;
+    formatStr.erase(remove(formatStr.begin(), formatStr.end(), '{'), formatStr.end());
+    formatStr.erase(remove(formatStr.begin(), formatStr.end(), '}'), formatStr.end());
+
+
+    string a;
+    for(stringstream sst(formatStr); getline(sst, a, ','); )
+    {
+       
+        vertexVector.push_back(a);
+     
+    }
+ 
+    //copy (vertexVector.begin(), vertexVector.end(), ostream_iterator<string>(cout));
+
+    vertexNum=vertexVector.size();
+    
+}
+
+void Graph::readFileEdge()
+{
+    ifstream in("edge.txt");
+
+    if (!in) {
+        cout << "Cannot open file.\n";
+        return;
+    }
+    string fullStr;
+    string formatStr;
+
+    while(!in.eof())
+    {
+        in >> fullStr;
+    }
+    formatStr=fullStr;
+    formatStr.erase(remove(formatStr.begin(), formatStr.end(), '{'), formatStr.end());
+    formatStr.erase(remove(formatStr.begin(), formatStr.end(), '}'), formatStr.end());
+
+    string a;
+    for(stringstream sst(formatStr); getline(sst, a, '.'); )
+    {
+        edgeVector.push_back(a);
+        
+    }
+    //cout<<edgeVector;
+    //copy (edgeVector.begin(), edgeVector.end(), ostream_iterator<string>(cout));
+
+    edgesNum=edgeVector.size();
 }
 
 string Graph::process(string const& s)
@@ -78,121 +111,23 @@ void::Graph::initEdge()
             //rlutil::resetColor();
         }
 
-        mMatrix[p1][p2] = 1;
+        mMatrix[p2][p1] = 1;
         
     }
 }
 
-//same thing as contains
-int Graph::getPosition(string str)
+string Graph::lowerString(string str)
 {
-    for(int i=0; i<vertexNum; i++)
-        if(mVertex[i]==str)
-            return i;
-    return -1;
+ 
+	for(int i=0;str[i]!='\0';i++)
+	{
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] = str[i] + 32;     
+	}
+
+    return str;
 }
 
-
-void Graph::createMatrix(){
-    initVertex();
-    initEdge();
-}
-
-void Graph::print()
-{
-    createMatrix();
-
-    cout << "**Matrix Graph**" << endl;
-    for (int i = 0; i < vertexNum; i++)
-    {
-        for (int j = 0; j < vertexNum; j++)
-        {
-            cout << mMatrix[i][j] << " ";
-        }
-            
-        cout << endl;
-    }
-}
-
-void Graph::loadText()
-{
-    vertexVector.push_back("piedra");
-    vertexVector.push_back("papel");
-    vertexVector.push_back("tijera");
-    vertexVector.push_back("lagartija");
-    vertexVector.push_back("spock");
-
-    edgeVector.push_back("(piedra,tijera)");
-    edgeVector.push_back("(piedra,lagartija");
-    edgeVector.push_back("(papel,piedra)");
-    edgeVector.push_back("(papel,spock)");
-    edgeVector.push_back("(tijera,papel)");
-    edgeVector.push_back("(tijera,lagartija)");
-    edgeVector.push_back("(lagartija,papel)");
-    edgeVector.push_back("(lagartija,spock)");
-    edgeVector.push_back("(spock,piedra)");
-    edgeVector.push_back("(spock,tijera");
-    /*
-  //int x, y;
-  ifstream in("juego.txt");
-
-  if (!in) {
-    cout << "Cannot open file.\n";
-    return;
-  }
-
-    string fullStr;
-    while(!in.eof())
-    {
-        in >> fullStr;
-    }
-
-    std::string s = fullStr;
-    //cout<<s;
-    string newStr;
-    for(int i=2; i<37;i++)
-    {
-        newStr+=s[i];
-        //cout<<s[i];
-    }
-    cout<<newStr<<endl;
-    vertexVector.push_back(newStr);
-    cout<<vertexVector;
-    cout<<sizeof(vertexVector);
- */
-  //in.close();
-}
-
-void Graph::printMatrix()
-{
-    for(int i=0; i<6; i++)
-    {
-        for(int j=0; j<6; j++)
-        {
-             //rock (R), paper (P), scissors (S), lizard (L), spock(K)
-            if (gameRules[i][j] == 'R') {
-                cout<<RED<<" "<<gameRules[i][j]<<" "<<RESET;
-            }else if (gameRules[i][j] == 'P') {
-                cout<<YELLOW<<" "<<gameRules[i][j]<<" "<<RESET;
-            }else if (gameRules[i][j] == 'S') {
-                cout<<MAGENTA<<" "<<gameRules[i][j]<<" "<<RESET;
-            }else if (gameRules[i][j] == 'L') {
-                cout<<GREEN<<" "<<gameRules[i][j]<<" "<<RESET;
-            }else if (gameRules[i][j] == 'K') {
-                cout<<BLUE<<" "<<gameRules[i][j]<<" "<<RESET;
-            }else{
-              cout<<" "<<gameRules[i][j]<<" ";  
-            }
-        }
-        cout<<"\n";
-    }
-
-}
-
-void Graph::winningComb(string x, string y)
-{
-
-}
 
 bool Graph::contains(string elem)
 {
@@ -204,38 +139,128 @@ bool Graph::contains(string elem)
     return result;
 }
 
-void Graph::play(int a, int b)
+
+//same thing as contains
+int Graph::getPosition(string str)
 {
-    cout<<a<<b;
+    for(int i=0; i<vertexNum; i++)
+        if(mVertex[i]==str)
+            return i;
+    return -1;
+}
+
+void Graph::initAux(){
+    aux.push_back('R');
+    aux.push_back('P');
+    aux.push_back('S');
+    aux.push_back('L');
+    aux.push_back('K');
     
-    if(mMatrix[b][a] == 1)
+}
+
+
+void Graph::createMatrix(){
+    initVertex();
+    initEdge();
+    initAux();
+
+}
+
+void Graph::print()
+{
+
+    createMatrix();
+    
+    cout << "**Matrix Graph**" << endl;
+    for(int i=0; i<vertexNum;i++)
+    {  
+            if(i==0)
+            {
+                cout<<"  ";
+                
+            }
+            if (aux[i]== 'R') {
+                cout<<RED<<aux[i]<<" "<<RESET;
+            }else if (aux[i]== 'P') {
+                cout<<YELLOW<<aux[i]<<" "<<RESET;
+            }else if (aux[i]== 'S') {
+                cout<<MAGENTA<<aux[i]<<" "<<RESET;
+            }else if (aux[i] == 'L') {
+                cout<<GREEN<<aux[i]<<" "<<RESET;
+            }else if (aux[i]== 'K') {
+                cout<<BLUE<<aux[i]<<" "<<RESET;
+            }else{
+              cout<<aux[i]<<" ";  
+            }
+        
+    }
+    cout << endl;
+    for (int i = 0; i < vertexNum; i++)
     {
-        cout<<"1"<<endl;
-        //cout << mMatrix[b][a]<< endl;
-    }else
-    {
-        cout<<"0"<<endl;
-        //cout << "Jugador 2 GANA!!!!!" << endl;
+        if (aux[i]== 'R') {
+            cout<<RED<<aux[i]<<" "<<RESET;
+        }else if (aux[i]== 'P') {
+            cout<<YELLOW<<aux[i]<<" "<<RESET;
+        }else if (aux[i]== 'S') {
+            cout<<MAGENTA<<aux[i]<<" "<<RESET;
+        }else if (aux[i] == 'L') {
+            cout<<GREEN<<aux[i]<<" "<<RESET;
+        }else if (aux[i]== 'K') {
+            cout<<BLUE<<aux[i]<<" "<<RESET;
+        }else{
+            cout<<aux[i]<<" ";  
+        }
+        for (int j = 0; j < vertexNum; j++)
+        {
+            cout<<mMatrix[i][j] << " ";
+        }
+            
+        cout << endl;
     }
 
-    //cout<<mMatrix[1][1];
-    /*
-    if ((mMatrix[a][b] == mMatrix[1][1]) || (mMatrix[a][b] == mMatrix[2][2]) || (mMatrix[a][b] || mMatrix[3][3]) 
-    || (mMatrix[a][b] == mMatrix[4][4])|| (mMatrix[a][b] == mMatrix[5][5])) {
-        cout << "Empate" << endl;
+}
+
+bool Graph::validateUserInput(string str, string str2)
+{
+    bool result = false;
+    if( (find(vertexVector.begin(), vertexVector.end(), str) != edgeVector.end()) &&
+     (find(vertexVector.begin(), vertexVector.end(), str2) != edgeVector.end()) )
+    {
+        result = true;
     }
-    */
-    /*
-    if ((mMatrix[a][b] == gameRules[1][1]) || (gameRules[a][b] == gameRules[2][2]) || (gameRules[a][b] || gameRules[3][3]) 
-    || (gameRules[a][b] == gameRules[4][4])|| (gameRules[a][b] == gameRules[5][5])) {
-        cout << gameRules[a][b] << endl;
+    return result;
+}
+
+void Graph::gameValidation(string p1, string p2)
+{
+    bool first;
+    bool second;
+    string neatPair1;
+    neatPair1="("+p1+","+p2+")";
+    string neatPair2;
+    neatPair2="("+p2+","+p1+")";
+
+    if(contains(neatPair1))
+    {
+        first=true;
+        second=false;
+        
+    }else if(contains(neatPair2)){
+        first=false;
+        second=true;
     }
-    else if (gameRules[a][b] == 1) {
-        cout << "Jugador 1 GANA!!!!!" << endl;
+    if(first)
+    {
+        cout<<GREEN<<"Player 1 wins!\n"<<RESET;
+        cout<<RED<<"Player 2 lose!\n"<<RESET;
+    }else if(second)
+    {
+        cout<<GREEN<<"Player 2 wins!\n"<<RESET;
+        cout<<RED<<"Player 1 lose!\n"<<RESET;
     }
-    else {
-        cout << "EMPATE!!!" << endl;
+    else if ((!first) || (!second)){
+        cout<<BLUE<<"Sheldon says Draw!\n"<<RESET;
     }
-    */
+
 }
 

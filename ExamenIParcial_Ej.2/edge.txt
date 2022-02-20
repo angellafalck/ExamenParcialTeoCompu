@@ -1,0 +1,1 @@
+{(rock,scissors).(rock,lizzard).(paper,rock).(paper,spock).(scissors,paper).(scissors,lizzard).(lizzard,paper).(lizzard,spock).(spock,rock).(spock,scissors)}
