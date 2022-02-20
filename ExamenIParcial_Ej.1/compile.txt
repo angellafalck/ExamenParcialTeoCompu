@@ -1,0 +1,3 @@
+Use commands:
+g++ main.cpp Grafos.cpp
+./a.out

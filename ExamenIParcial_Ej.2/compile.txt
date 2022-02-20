@@ -1,0 +1,3 @@
+Use commands:
+g++ main.cpp Graph.cpp
+./a.out
