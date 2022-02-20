@@ -37,6 +37,7 @@ public:
     bool contains(string elem);
     void initAux();
     bool validateUserInput(string, string);
+    void play(int j1, int j2);
 
     //Variables
     int p1, p2;

@@ -171,7 +171,7 @@ void Graph::print()
 
     createMatrix();
     
-    cout << "**Matrix Graph**" << endl;
+    cout << "**Truth Table**" << endl;
     for(int i=0; i<vertexNum;i++)
     {  
             if(i==0)
@@ -220,6 +220,7 @@ void Graph::print()
 
 }
 
+
 bool Graph::validateUserInput(string str, string str2)
 {
     bool result = false;
@@ -230,7 +231,26 @@ bool Graph::validateUserInput(string str, string str2)
     }
     return result;
 }
+void Graph::play(int j1, int j2)
+{
+    int pos1, pos2;
+    pos1=j1-1;
+    pos2=j2-1;
 
+    if (mMatrix[pos2][pos1] == 1) {
+        cout<<GREEN<<"Player 1 wins!\n"<<RESET;
+        cout<<RED<<"Player 2 lose!\n"<<RESET;
+    }else if(pos2==pos1)
+    {
+        cout<<BLUE<<"Sheldon says Draw!\n"<<RESET;
+        return;
+    }else if(mMatrix[pos2][pos1] == 0)
+    {
+        cout<<GREEN<<"Player 2 wins!\n"<<RESET;
+        cout<<RED<<"Player 1 lose!\n"<<RESET;
+    }
+
+}
 void Graph::gameValidation(string p1, string p2)
 {
     bool first;
